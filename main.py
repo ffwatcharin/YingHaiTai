@@ -10,7 +10,7 @@ mixer.init()
 pygame.init()
 
 # set screen size
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 850
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.9)
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
@@ -389,7 +389,7 @@ class Soldier(pygame.sprite.Sprite):
 	def draw(self):
 		screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
-class LiveEntity(pygame.sprite.Sprite):
+class Special(pygame.sprite.Sprite):
     # this class is responsible for the animated entities such as Dogs , crows , chests
     def __init__(self, entity_type, x, y, scale):
         # Call the parent class (Sprite) constructor
@@ -511,13 +511,13 @@ class World():
 						enemy = Soldier('enemy_two', x * TILE_SIZE, y * TILE_SIZE, 2, 3, 20, 0)
 						enemy_group.add(enemy)
 					elif tile == 27:  # create bird
-						bird = LiveEntity('crow', x * TILE_SIZE + 20, y * TILE_SIZE + 13, 2)
+						bird = Special('crow', x * TILE_SIZE + 20, y * TILE_SIZE + 13, 2)
 						live_entity_group.add(bird)
 					elif tile == 28:  # create dog
-						dog = LiveEntity('dog', x * TILE_SIZE + 30, y * TILE_SIZE + 7, 1.5)
+						dog = Special('dog', x * TILE_SIZE + 30, y * TILE_SIZE + 7, 1.5)
 						live_entity_group.add(dog)
 					elif tile == 29:  # create chest
-						chest = LiveEntity('chest', x * TILE_SIZE + 30, y * TILE_SIZE + 12, 2)
+						chest = Special('chest', x * TILE_SIZE + 30, y * TILE_SIZE + 12, 2)
 						live_entity_group.add(chest)
 
 		return player, health_bar
