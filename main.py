@@ -104,6 +104,7 @@ GREEN = (5, 162, 0)
 YELLOW = (252, 237, 24)
 SKYBLUE = (193, 243, 255)
 MINT = (22, 108, 129)
+RED1 = (255, 0, 0)
 
 #define font
 font = pygame.font.SysFont('Avenir', 30)
@@ -407,9 +408,9 @@ class Special(pygame.sprite.Sprite):
             # reset temporary list of images
             temp_list = []
             # count number of files in folder
-            frame_numbers = len(os.listdir(f'assets/img/live_entity/{entity_type}/{animation}'))
+            frame_numbers = len(os.listdir(f'assets/img/special/{entity_type}/{animation}'))
             for i in range(frame_numbers):
-                img = pygame.image.load(f'assets/img/live_entity/{entity_type}/{animation}/{i}.png').convert_alpha()
+                img = pygame.image.load(f'assets/img/special/{entity_type}/{animation}/{i}.png').convert_alpha()
                 img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
                 temp_list.append(img)
             self.animation_list.append(temp_list)
@@ -638,7 +639,7 @@ class Bullet(pygame.sprite.Sprite):
 				if enemy.alive:
 					enemy.health -= 25
 					if enemy.health >= 0:
-						damage_text = DamageText(enemy.rect.centerx, enemy.rect.centery, str(enemy.health), WHITE)
+						damage_text = DamageText(enemy.rect.centerx, enemy.rect.centery, str(enemy.health), RED1)
 						damage_text_group.add(damage_text)
 					self.kill()
 		for live_entity in live_entity_group:
