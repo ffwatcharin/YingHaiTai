@@ -5,9 +5,6 @@ import random
 import csv
 import button
 
-#la;skjdal;sjdlksajdlksajdsl;a
-#sald;'asld;'
-
 # initializing
 mixer.init()
 pygame.init()
