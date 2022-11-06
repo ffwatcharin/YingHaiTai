@@ -147,7 +147,7 @@ def reset_level():
 	decoration_group.empty()
 	water_group.empty()
 	exit_group.empty()
-	live_entity_group.empty()
+	special_group.empty()
 	damage_text_group.empty()
 
 	#create empty tile list
@@ -392,10 +392,10 @@ class Soldier(pygame.sprite.Sprite):
 
 class Special(pygame.sprite.Sprite):
     # this class is responsible for the animated entities such as Dogs , crows , chests
-    def __init__(self, entity_type, x, y, scale):
+    def __init__(self, special_type, x, y, scale):
         # Call the parent class (Sprite) constructor
         pygame.sprite.Sprite.__init__(self)
-        self.entity_type = entity_type
+        self.special_type = special_type
         self.frame_index = 0
         self.health = 10
         self.alive = True
@@ -408,9 +408,9 @@ class Special(pygame.sprite.Sprite):
             # reset temporary list of images
             temp_list = []
             # count number of files in folder
-            frame_numbers = len(os.listdir(f'assets/img/special/{entity_type}/{animation}'))
+            frame_numbers = len(os.listdir(f'assets/img/special/{special_type}/{animation}'))
             for i in range(frame_numbers):
-                img = pygame.image.load(f'assets/img/special/{entity_type}/{animation}/{i}.png').convert_alpha()
+                img = pygame.image.load(f'assets/img/special/{special_type}/{animation}/{i}.png').convert_alpha()
                 img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
                 temp_list.append(img)
             self.animation_list.append(temp_list)
@@ -437,7 +437,7 @@ class Special(pygame.sprite.Sprite):
             if self.alive:
                 self.health -= 25
                 damage_text = DamageText(self.rect.centerx,
-                                         self.rect.centery, str(" speed has been increased "), SKYBLUE)
+                                         self.rect.centery, str(" SPEED !!!!!!!! "), SKYBLUE)
                 damage_text_group.add(damage_text)
                 if player.alive:
                     player.speed += 2
@@ -461,7 +461,7 @@ class Special(pygame.sprite.Sprite):
         if self.health <= 0:
             self.health = 0
             self.alive = False
-            self.update_action(1)  # Entity Death animation
+            self.update_action(1)  # Special Death animation
 
     def draw(self):
         screen.blit(self.image, self.rect)
@@ -513,13 +513,13 @@ class World():
 						enemy_group.add(enemy)
 					elif tile == 27:  # create bird
 						bird = Special('crow', x * TILE_SIZE + 20, y * TILE_SIZE + 13, 2)
-						live_entity_group.add(bird)
+						special_group.add(bird)
 					elif tile == 28:  # create dog
 						dog = Special('dog', x * TILE_SIZE + 30, y * TILE_SIZE + 7, 1.5)
-						live_entity_group.add(dog)
+						special_group.add(dog)
 					elif tile == 29:  # create chest
 						chest = Special('chest', x * TILE_SIZE + 30, y * TILE_SIZE + 12, 2)
-						live_entity_group.add(chest)
+						special_group.add(chest)
 
 		return player, health_bar
 
@@ -574,16 +574,16 @@ class ItemBox(pygame.sprite.Sprite):
 			# check the box type
 			if self.item_type == 'Health':
 				player.health += 25
-				damage_text = DamageText(self.rect.centerx, self.rect.centery, f"Health +25", WHITE)
+				damage_text = DamageText(self.rect.centerx, self.rect.centery, f"Health +25", GREEN)
 				damage_text_group.add(damage_text)
 				if player.health > player.max_health:
 					player.health = player.max_health
 			elif self.item_type == 'Ammo':
 				player.ammo += 15
-				damage_text = DamageText(self.rect.centerx,self.rect.centery, f"Ammo +15", WHITE)
+				damage_text = DamageText(self.rect.centerx,self.rect.centery, f"Ammo +15", GREEN)
 				damage_text_group.add(damage_text)
 			elif self.item_type == 'Grenade':
-				damage_text = DamageText(self.rect.centerx,self.rect.centery, f"Grenade +3", WHITE)
+				damage_text = DamageText(self.rect.centerx,self.rect.centery, f"Grenade +3", GREEN)
 				damage_text_group.add(damage_text)
 				player.grenades += 3
 			#delete boxes
@@ -642,13 +642,13 @@ class Bullet(pygame.sprite.Sprite):
 						damage_text = DamageText(enemy.rect.centerx, enemy.rect.centery, str(enemy.health), RED1)
 						damage_text_group.add(damage_text)
 					self.kill()
-		for live_entity in live_entity_group:
-			if live_entity.entity_type != "chest":
-				if pygame.sprite.spritecollide(live_entity, bullet_group, False):
-					if live_entity.alive:
-						live_entity.health = -25
-						damage_text = DamageText(live_entity.rect.centerx,
-						live_entity.rect.centery, str("Y U SHOOT BRO! HAHAHAHAH"), RED)
+		for special in special_group:
+			if special.special_type != "chest":
+				if pygame.sprite.spritecollide(special, bullet_group, False):
+					if special.alive:
+						special.health = -25
+						damage_text = DamageText(special.rect.centerx,
+						special.rect.centery, str("Y U SHOOT BRO! HAHAHAHAH"), RED)
 						damage_text_group.add(damage_text)
 						if player.alive:
 							player.health -= 50
@@ -710,15 +710,15 @@ class Grenade(pygame.sprite.Sprite):
 					abs(self.rect.centery - enemy.rect.centery) < TILE_SIZE * 2:
 					enemy.health -= 50
 					if enemy.health >= 0:
-						damage_text = DamageText(enemy.rect.centerx, enemy.rect.centery, str(enemy.health), WHITE)
+						damage_text = DamageText(enemy.rect.centerx, enemy.rect.centery, str(enemy.health), RED1)
 						damage_text_group.add(damage_text)
-			for live_entity in live_entity_group:
-				if live_entity.entity_type != "chest":
-					if abs(self.rect.centerx - live_entity.rect.centerx) < TILE_SIZE * 2 and \
-						abs(self.rect.centery - live_entity.rect.centery) < TILE_SIZE * 2:
-						if live_entity.alive:
-							live_entity.health = -25
-							damage_text = DamageText(live_entity.rect.centerx, live_entity.rect.centery, str("LOL NOOB"), RED)
+			for special in special_group:
+				if special.special_type != "chest":
+					if abs(self.rect.centerx - special.rect.centerx) < TILE_SIZE * 2 and \
+						abs(self.rect.centery - special.rect.centery) < TILE_SIZE * 2:
+						if special.alive:
+							special.health = -25
+							damage_text = DamageText(special.rect.centerx, special.rect.centery, str("LOL NOOB"), RED)
 							damage_text_group.add(damage_text)
 							if player.alive:
 								player.health -= 50
@@ -796,7 +796,7 @@ item_box_group = pygame.sprite.Group()
 decoration_group = pygame.sprite.Group()
 water_group = pygame.sprite.Group()
 exit_group = pygame.sprite.Group()
-live_entity_group = pygame.sprite.Group()
+special_group = pygame.sprite.Group()
 
 #create empty tile list
 world_data = []
@@ -822,7 +822,6 @@ while run:
 	# menu
 	if start_game == False:
 		#main menu
-		#screen.fill(BG)
 		screen.blit(intro_bg,(0, 0)) 
 		#add button
 		if start_button.draw(screen):
@@ -840,9 +839,9 @@ while run:
 		health_bar.draw(player.health)
 		
 		#show ammo
-		draw_text(f'AMMO : {player.ammo}', font, BLACK, 10, 40)
+		draw_text(f'AMMO : {player.ammo}', font, WHITE, 10, 40)
 		#show grenades
-		draw_text(f'GRENADE : {player.grenades}', font, BLACK, 10, 60)
+		draw_text(f'GRENADE : {player.grenades}', font, WHITE, 10, 60)
 		draw_lvl_info_text(f'Mission {level}', font, WHITE, SCREEN_WIDTH // 2 - 30, SCREEN_HEIGHT // 2)
 		draw_lvl_info_text(f'{MISSIONS[level]}', font, WHITE, SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 30)
 		
@@ -863,7 +862,7 @@ while run:
 		decoration_group.update()
 		water_group.update()
 		exit_group.update()
-		live_entity_group.update()
+		special_group.update()
 
 		# draw damage text
 		damage_text_group.draw(screen)
@@ -874,8 +873,7 @@ while run:
 		decoration_group.draw(screen)
 		water_group.draw(screen)
 		exit_group.draw(screen)
-		live_entity_group.draw(screen)
-
+		special_group.draw(screen)
 
 		#show intro
 		if start_intro == True:
