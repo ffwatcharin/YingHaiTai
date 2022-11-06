@@ -7,8 +7,6 @@ pygame.init()
 clock = pygame.time.Clock()
 FPS = 60
 
-
-
 # game window
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 640
@@ -51,7 +49,6 @@ for x in range(TILE_TYPES):
 save_img = pygame.image.load('assets/img/save_btn.png').convert_alpha()
 load_img = pygame.image.load('assets/img/load_btn.png').convert_alpha()
 
-
 # def color
 GREEN = (144, 201, 120)
 WHITE = (255, 255, 255)
@@ -70,12 +67,10 @@ for row in range(ROWS):
 for tile in range(0, MAX_COLS):
 	world_data[ROWS - 1][tile] = 0
 
-
 #function for outputting text onto the screen
 def draw_text(text, font, text_color, x, y):
 	img = font.render(text, True, text_color)
 	screen.blit(img, (x, y))
-
 
 # create function for drawing bg
 def draw_bg():
@@ -107,7 +102,6 @@ def draw_world():
 		for x, tile in enumerate(row):
 			if tile >= 0:
 				screen.blit(img_list[tile], (x * TILE_SIZE - scroll, y * TILE_SIZE))
-
 
 # create buttons
 save_button = button.Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT + LOWER_MARGIN - 120, save_img, 1)
@@ -152,7 +146,6 @@ while run:
                 for y, tile in enumerate(row):
                     world_data[x][y] = int(tile)
 
-
     # draw tile panel and tiles
     pygame.draw.rect(screen, GREEN, (SCREEN_WIDTH,
                      0, SIDE_MARGIN, SCREEN_HEIGHT))
@@ -187,8 +180,6 @@ while run:
     	if pygame.mouse.get_pressed()[2] == 1:
     		world_data[y][x] = -1
     
-
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -204,7 +195,6 @@ while run:
                 scroll_right = True
             if event.key == pygame.K_RSHIFT:
                 scroll_speed = 5
-
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
