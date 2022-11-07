@@ -31,7 +31,7 @@ COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
 TILE_TYPES = 30
 MAX_LEVELS = 3
-MISSIONS = {1: 'CurryLand! YIN DEE TON RUB', 2: "120$ Curry", 3: "SuperCurry"}
+MISSIONS = {1: 'CurryLand! YIN DEE TON RUB', 2: "120$ Curry Mahussajun", 3: "SuperCurry Yummy makmak"}
 ENEMY_NAME = ['enemy', 'enemy_two']
 screen_scroll = 0
 bg_scroll = 0
@@ -39,6 +39,7 @@ level = 1
 start_game = False
 start_intro = False
 total_time = 0
+#game_pause = False
 
 #player actions
 moving_left = False
@@ -589,7 +590,6 @@ class ItemBox(pygame.sprite.Sprite):
 			#delete boxes
 			self.kill()
 
-
 class HealthBar():
 	def __init__(self, x, y, health, max_health):
 		self.x = x
@@ -813,7 +813,6 @@ with open(f'level{level}_data.csv', newline = '') as csvfile:
 world = World()
 player, health_bar = world.process_data(world_data)
 
-
 run = True
 while run:
 
@@ -843,7 +842,7 @@ while run:
 		#show grenades
 		draw_text(f'GRENADE : {player.grenades}', font, WHITE, 10, 60)
 		draw_lvl_info_text(f'Mission {level}', font, WHITE, SCREEN_WIDTH // 2 - 30, SCREEN_HEIGHT // 2)
-		draw_lvl_info_text(f'{MISSIONS[level]}', font, WHITE, SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 30)
+		draw_lvl_info_text(f'{MISSIONS[level]}', font, WHITE, SCREEN_WIDTH // 2 - 120, SCREEN_HEIGHT // 2 + 30)
 		
 		player.update()
 		player.draw()
@@ -938,7 +937,6 @@ while run:
 					world = World()
 					player, health_bar = world.process_data(world_data)
 
-
 	for event in pygame.event.get():
 		#quit
 		if event.type == pygame.QUIT:
@@ -958,6 +956,7 @@ while run:
 				jump_fx.play()
 			if event.key == pygame.K_ESCAPE:
 				run = False
+
 		#keyboard released
 		if event.type == pygame.KEYUP:
 			if event.key == pygame.K_a:
