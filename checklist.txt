@@ -1,4 +1,0 @@
-1.pause game
-2.player lives
-3.score -- time/kill
-4.end

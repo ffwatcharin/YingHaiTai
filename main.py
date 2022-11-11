@@ -4,13 +4,17 @@ import os
 import random
 import csv
 import button
+import sys
+import time
+from scoreboard import ScoreInput
 
 # initializing
+from pygame.locals import *
 mixer.init()
 pygame.init()
 
 # set screen size
-SCREEN_WIDTH = 850
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.9)
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
@@ -31,7 +35,7 @@ COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
 TILE_TYPES = 30
 MAX_LEVELS = 3
-MISSIONS = {1: 'CurryLand! YIN DEE TON RUB', 2: "120$ Curry Mahussajun", 3: "SuperCurry Yummy makmak"}
+MISSIONS = {1: 'CurryLand! YIN DEE TON RUB', 2: "120$ Curry Mahussajunnn", 3: "SuperCurry Yummy makmak"}
 ENEMY_NAME = ['enemy', 'enemy_two']
 screen_scroll = 0
 bg_scroll = 0
@@ -68,6 +72,7 @@ intro_bg = pygame.transform.scale(intro_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
 start_img = pygame.image.load(f'assets/img/buttons/start_btn.png').convert_alpha()
 exit_img = pygame.image.load(f'assets/img/buttons/exit_btn.png').convert_alpha()
 restart_img = pygame.image.load(f'assets/img/buttons/restart_btn.png').convert_alpha()
+score_img = pygame.image.load(f'assets/img/buttons/score_btn.png').convert_alpha()
 
 # backgrounds
 tree1_img = pygame.image.load(f'assets/img/background/level{level}/tree1.png').convert_alpha()
@@ -109,6 +114,10 @@ RED1 = (255, 0, 0)
 
 #define font
 font = pygame.font.SysFont('Avenir', 30)
+
+def draw_score():
+    text_score = base_font.render("SCORE : " + str(score + player.temp_score), True, (255, 255, 255))
+    screen.blit(text_score, (1100,20))
 
 def draw_text(text, font, text_color, x, y):
 	# to display some texts (i.e. enemies health and etc.)
@@ -205,7 +214,6 @@ class Soldier(pygame.sprite.Sprite):
 		self.idling_counter = 0
 		
 		#load all images for the players
-				             #0      1     2        3
 		animation_types = ['idle', 'run','jump', 'death']
 		for animation in animation_types:
 			#reset temporary list of images
@@ -353,7 +361,6 @@ class Soldier(pygame.sprite.Sprite):
 		#scroll
 		self.rect.x += screen_scroll
 		
-
 	def update_animation(self):
 		#update animation
 		ANIMATION_COOLDOWN = 100
