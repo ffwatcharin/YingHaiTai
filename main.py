@@ -787,7 +787,6 @@ class ScreenFade():
 
 		return fade_complete
 
-
 #create screen fades
 intro_fade = ScreenFade(1, BLACK, 4)
 death_fade = ScreenFade(2, YELLOW, 10)
@@ -800,7 +799,6 @@ score_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 110, 
 resume_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 - 110, resume_img, 1)
 menu_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 70, menu_img, 1)
 menu1_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 230, menu1_img, 1)
-
 
 #create sprite groups
 damage_text_group = pygame.sprite.Group()
@@ -829,15 +827,18 @@ with open(f'level{level}_data.csv', newline = '') as csvfile:
 world = World()
 player, health_bar = world.process_data(world_data)
 
+
+#name menu
 def draw_name():
     screen.fill('GREY')
     
-    text_name = font.render("INPUT YOUR NAME", True, (255, 255, 255))
-    screen.blit(text_name, (SCREEN_WIDTH//2 - text_name.get_width()//2, 50))
+    text_name = font.render("Input Your Name Please!", True, BLACK)
+    screen.blit(text_name, (SCREEN_WIDTH // 2 - text_name.get_width() // 2, 50))
     
-    text_surface = font.render(Player_name, True, (255, 255, 255))
-    pygame.draw.rect(screen, 'WHITE', pygame.Rect(SCREEN_WIDTH//2 - text_surface.get_width()//2-5, SCREEN_HEIGHT//2 - text_surface.get_height()//2-5, text_surface.get_width()+10, text_surface.get_height()+5),  2)
-    screen.blit(text_surface,(SCREEN_WIDTH//2 - text_surface.get_width()//2, SCREEN_HEIGHT//2 - text_surface.get_height()//2))
+    text_surface = font.render(Player_name, True, GREEN) 
+    screen.blit(text_surface,(SCREEN_WIDTH // 2 - text_surface.get_width() // 2, SCREEN_HEIGHT // 2 - text_surface.get_height() // 2))
+
+#score
 
 sctxt =open("scorebar.txt",'r')
 pltxt =open("player.txt",'r')
@@ -899,17 +900,20 @@ class Score_Board():
                 playerlist.append(playerx)
                 playerx= ""
 
-        self.playername_first = ScoreInput(screen,"1. "+playerlist[0],(0,0,0),20,150,3)
-        self.playername_second = ScoreInput(screen,"2. "+playerlist[1],(0,0,0),20,250,3)
-        self.playername_third = ScoreInput(screen,"3. "+playerlist[2],(0,0,0),20,350,3)
-        self.playername_fourth = ScoreInput(screen,"4. "+playerlist[3],(0,0,0),20,450,3)
-        self.playername_fifth = ScoreInput(screen,"5. "+playerlist[4],(0,0,0),20,550,3)
+        score_name = font.render("High Score", True, BLACK)
+        screen.blit(score_name, (SCREEN_WIDTH // 2 - score_name.get_width() // 2, 50))
+
+        self.playername_first = ScoreInput(screen,"1. " + playerlist[0], GREEN, 200, 100, 2)
+        self.playername_second = ScoreInput(screen,"2. " + playerlist[1],GREEN, 200, 200 ,2)
+        self.playername_third = ScoreInput(screen,"3. " + playerlist[2], GREEN, 200, 300, 2)
+        self.playername_fourth = ScoreInput(screen,"4. " + playerlist[3],GREEN, 200, 400, 2)
+        self.playername_fifth = ScoreInput(screen,"5. " + playerlist[4], GREEN, 200, 500, 2)
         
-        self.score_first = ScoreInput(screen,scorelist[0],(0,0,0),500,150,3)
-        self.score_second = ScoreInput(screen,scorelist[1],(0,0,0),500,250,3)
-        self.score_third = ScoreInput(screen,scorelist[2],(0,0,0),500,350,3)
-        self.score_fourth = ScoreInput(screen,scorelist[3],(0,0,0),500,450,3)
-        self.score_fifth = ScoreInput(screen,scorelist[4],(0,0,0),500,550,3)
+        self.score_first = ScoreInput(screen,scorelist[0], MINT, 550, 100, 2)
+        self.score_second = ScoreInput(screen,scorelist[1],MINT, 550, 200 ,2)
+        self.score_third = ScoreInput(screen,scorelist[2], MINT, 550, 300, 2)
+        self.score_fourth = ScoreInput(screen,scorelist[3],MINT, 550, 400, 2)
+        self.score_fifth = ScoreInput(screen,scorelist[4], MINT, 550, 500, 2)
 
         sctxt.close()
         pltxt.close()
@@ -931,19 +935,18 @@ class Score_Board():
         screen.fill('GREY')
         self.display_score() 
 
+#score vars
 scorebar = Score_Board()
 ScoreStart = False
 ScorePlayer = 0
 player_name = False
 Player_name = ''
 
+#main game loop
 run = True
 while run:
 
 	clock.tick(FPS)
-
-	print(ScorePlayer + player.temp_score)
-
 
 	# menu
 	if start_game == False:
@@ -961,8 +964,6 @@ while run:
 			scorebar.run()
 			if menu1_button.draw(screen):
 				ScoreStart = False
-
-
 	else:
 		if player_name:
 			total_time += 1
@@ -1119,11 +1120,6 @@ while run:
 									world_data[x][y] = int(tile)
 						world = World()
 						player, health_bar = world.process_data(world_data)
-
-
-
-
-
 		else: 
 			draw_bg()
 			draw_name()	
@@ -1159,7 +1155,6 @@ while run:
 				run = False
 			if event.key == pygame.K_p:
 				game_pause = True
-
 
 		#keyboard released
 		if event.type == pygame.KEYUP:
