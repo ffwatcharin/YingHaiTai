@@ -4,17 +4,15 @@ import os
 import random
 import csv
 import button
-import sys
 import time
 from scoreboard import ScoreInput
 
 # initializing
-from pygame.locals import *
 mixer.init()
 pygame.init()
 
 # set screen size
-SCREEN_WIDTH = 800
+SCREEN_WIDTH = 850
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.9)
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
@@ -43,7 +41,8 @@ level = 1
 start_game = False
 start_intro = False
 total_time = 0
-#game_pause = False
+game_pause = False
+
 
 #player actions
 moving_left = False
@@ -73,6 +72,8 @@ start_img = pygame.image.load(f'assets/img/buttons/start_btn.png').convert_alpha
 exit_img = pygame.image.load(f'assets/img/buttons/exit_btn.png').convert_alpha()
 restart_img = pygame.image.load(f'assets/img/buttons/restart_btn.png').convert_alpha()
 score_img = pygame.image.load(f'assets/img/buttons/score_btn.png').convert_alpha()
+resume_img = pygame.image.load(f'assets/img/buttons/resume_btn.png').convert_alpha()
+menu_img = pygame.image.load(f'assets/img/buttons/menu_btn.png').convert_alpha()
 
 # backgrounds
 tree1_img = pygame.image.load(f'assets/img/background/level{level}/tree1.png').convert_alpha()
@@ -116,8 +117,8 @@ RED1 = (255, 0, 0)
 font = pygame.font.SysFont('Avenir', 30)
 
 def draw_score():
-    text_score = base_font.render("SCORE : " + str(score + player.temp_score), True, (255, 255, 255))
-    screen.blit(text_score, (1100,20))
+    text_score = font.render("SCORE : " + str(ScorePlayer + player.temp_score), True, (255, 255, 255))
+    screen.blit(text_score, (710,20))
 
 def draw_text(text, font, text_color, x, y):
 	# to display some texts (i.e. enemies health and etc.)
@@ -203,7 +204,7 @@ class Soldier(pygame.sprite.Sprite):
 		self.flip = False
 		self.animation_list = []
 		self.frame_index = 0
-		
+		self.temp_score = 0
 		self.action = 0
 		self.update_time = pygame.time.get_ticks()
 
@@ -372,7 +373,10 @@ class Soldier(pygame.sprite.Sprite):
 		if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
 			self.update_time = pygame.time.get_ticks()
 			self.frame_index += 1
-		#if the animation has run out the reset back to the start
+			if self.action == 3 and self.frame_index == 1 and self.soldier_type != 'player':
+				player.temp_score += 100
+
+		#if the animation has run out the reset back to the starta
 		if self.frame_index >= len(self.animation_list[self.action]):
 			if self.action == 3:
 				self.frame_index = len(self.animation_list[self.action]) - 1
@@ -792,6 +796,10 @@ death_fade = ScreenFade(2, YELLOW, 10)
 start_button = button.Button(SCREEN_WIDTH // 2 -130, SCREEN_HEIGHT // 2 - 120, start_img, 1)
 exit_button = button.Button(SCREEN_WIDTH // 2 -110, SCREEN_HEIGHT // 2 - 10, exit_img, 1)
 restart_button = button.Button(SCREEN_WIDTH // 2 -100, SCREEN_HEIGHT // 2 - 50, restart_img, 2)
+score_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 110, score_img, 1)
+resume_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 - 110, resume_img, 1)
+menu_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 70, menu_img, 1)
+
 
 #create sprite groups
 damage_text_group = pygame.sprite.Group()
@@ -820,10 +828,120 @@ with open(f'level{level}_data.csv', newline = '') as csvfile:
 world = World()
 player, health_bar = world.process_data(world_data)
 
+def draw_name():
+    screen.fill('GREY')
+    
+    text_name = font.render("INPUT YOUR NAME", True, (255, 255, 255))
+    screen.blit(text_name, (SCREEN_WIDTH//2 - text_name.get_width()//2, 50))
+    
+    text_surface = font.render(Player_name, True, (255, 255, 255))
+    pygame.draw.rect(screen, 'WHITE', pygame.Rect(SCREEN_WIDTH//2 - text_surface.get_width()//2-5, SCREEN_HEIGHT//2 - text_surface.get_height()//2-5, text_surface.get_width()+10, text_surface.get_height()+5),  2)
+    screen.blit(text_surface,(SCREEN_WIDTH//2 - text_surface.get_width()//2, SCREEN_HEIGHT//2 - text_surface.get_height()//2))
+
+sctxt =open("scorebar.txt",'r')
+pltxt =open("player.txt",'r')
+scin =sctxt.read()
+plin =pltxt.read()
+            
+scorex =""
+scorelist =[]
+scindex =-1
+
+playerx=""
+playerlist =[]
+plindex =-1
+
+for x in scin:
+    scindex +=1
+    scorex += x
+    if x =='\n' or scindex == len(scin)-1:
+        scorelist.append(scorex)
+        scorex= ""
+
+for x in plin:
+    plindex +=1
+    playerx += x
+    if x =='\n' or plindex == len(plin)-1:
+        playerlist.append(playerx)
+        playerx= ""
+sctxt.close()
+pltxt.close()   
+tran = True   
+
+class Score_Board():
+    
+    def read (self):
+        sctxt =open("scorebar.txt",'r')
+        pltxt =open("player.txt",'r')
+        scin =sctxt.read()
+        plin =pltxt.read()
+            
+        scorex =""
+        scorelist =[]
+        scindex =-1
+
+        playerx=""
+        playerlist =[]
+        plindex =-1
+
+        for x in scin:
+            scindex +=1
+            scorex += x
+            if x =='\n' or scindex == len(scin)-1:
+                scorelist.append(scorex)
+                scorex= ""
+
+        for x in plin:
+            plindex +=1
+            playerx += x
+            if x =='\n' or plindex == len(plin)-1:
+                playerlist.append(playerx)
+                playerx= ""
+
+        self.playername_first = ScoreInput(screen,"1. "+playerlist[0],(0,0,0),20,150,3)
+        self.playername_second = ScoreInput(screen,"2. "+playerlist[1],(0,0,0),20,250,3)
+        self.playername_third = ScoreInput(screen,"3. "+playerlist[2],(0,0,0),20,350,3)
+        self.playername_fourth = ScoreInput(screen,"4. "+playerlist[3],(0,0,0),20,450,3)
+        self.playername_fifth = ScoreInput(screen,"5. "+playerlist[4],(0,0,0),20,550,3)
+        
+        self.score_first = ScoreInput(screen,scorelist[0],(0,0,0),500,150,3)
+        self.score_second = ScoreInput(screen,scorelist[1],(0,0,0),500,250,3)
+        self.score_third = ScoreInput(screen,scorelist[2],(0,0,0),500,350,3)
+        self.score_fourth = ScoreInput(screen,scorelist[3],(0,0,0),500,450,3)
+        self.score_fifth = ScoreInput(screen,scorelist[4],(0,0,0),500,550,3)
+
+        sctxt.close()
+        pltxt.close()
+    def display_score(self):
+        self.read()
+        self.playername_first.draw()
+        self.playername_second.draw()
+        self.playername_third.draw()
+        self.playername_fourth.draw()
+        self.playername_fifth.draw()
+        self.score_first.draw()
+        self.score_second.draw()
+        self.score_third.draw()
+        self.score_fourth.draw()
+        self.score_fifth.draw()
+    def run(self):
+        screen.fill('GREY')
+        self.display_score() 
+
+scorebar = Score_Board()
+ScoreStart = False
+ScorePlayer = 0
+player_name = False
+Player_name = ''
+
+
 run = True
 while run:
 
 	clock.tick(FPS)
+
+	print(ScorePlayer + player.temp_score)
+
 
 	# menu
 	if start_game == False:
@@ -835,114 +953,188 @@ while run:
 			start_intro = True
 		if exit_button.draw(screen):
 			run = False
+		if score_button.draw(screen):
+			ScoreStart = True
+		if ScoreStart:
+			scorebar.run()
+			if menu_button.draw(screen):
+				ScoreStart = False
+
+
 	else:
-		total_time += 1
-		#update bg
-		draw_bg()
-		#draw world map
-		world.draw()
-		#show player health
-		health_bar.draw(player.health)
-		
-		#show ammo
-		draw_text(f'AMMO : {player.ammo}', font, WHITE, 10, 40)
-		#show grenades
-		draw_text(f'GRENADE : {player.grenades}', font, WHITE, 10, 60)
-		draw_lvl_info_text(f'Mission {level}', font, WHITE, SCREEN_WIDTH // 2 - 30, SCREEN_HEIGHT // 2)
-		draw_lvl_info_text(f'{MISSIONS[level]}', font, WHITE, SCREEN_WIDTH // 2 - 120, SCREEN_HEIGHT // 2 + 30)
-		
-		player.update()
-		player.draw()
-		
-		for enemy in enemy_group:
-			enemy.control_ai()
-			enemy.update()
-			enemy.draw()
+		if player_name:
+			total_time += 1
+			#update bg
+			draw_bg()
+			#draw world map
+			world.draw()
+			draw_score()
+			#show player health
+			health_bar.draw(player.health)
+			
+			#show ammo
+			draw_text(f'AMMO : {player.ammo}', font, WHITE, 10, 40)
+			#show grenades
+			draw_text(f'GRENADE : {player.grenades}', font, WHITE, 10, 60)
+			draw_lvl_info_text(f'Mission {level}', font, WHITE, SCREEN_WIDTH // 2 - 30, SCREEN_HEIGHT // 2)
+			draw_lvl_info_text(f'{MISSIONS[level]}', font, WHITE, SCREEN_WIDTH // 2 - 120, SCREEN_HEIGHT // 2 + 30)
+			
+			player.update()
+			player.draw()
+			
+			for enemy in enemy_group:
+				enemy.control_ai()
+				enemy.update()
+				enemy.draw()
 
-		#update & draw groups
-		damage_text_group.update()
-		bullet_group.update()
-		grenade_group.update()
-		explosion_group.update()
-		item_box_group.update()
-		decoration_group.update()
-		water_group.update()
-		exit_group.update()
-		special_group.update()
+			#update & draw groups
+			damage_text_group.update()
+			bullet_group.update()
+			grenade_group.update()
+			explosion_group.update()
+			item_box_group.update()
+			decoration_group.update()
+			water_group.update()
+			exit_group.update()
+			special_group.update()
 
-		# draw damage text
-		damage_text_group.draw(screen)
-		bullet_group.draw(screen)
-		grenade_group.draw(screen)
-		explosion_group.draw(screen)
-		item_box_group.draw(screen)
-		decoration_group.draw(screen)
-		water_group.draw(screen)
-		exit_group.draw(screen)
-		special_group.draw(screen)
+			# draw damage text
+			damage_text_group.draw(screen)
+			bullet_group.draw(screen)
+			grenade_group.draw(screen)
+			explosion_group.draw(screen)
+			item_box_group.draw(screen)
+			decoration_group.draw(screen)
+			water_group.draw(screen)
+			exit_group.draw(screen)
+			special_group.draw(screen)
 
-		#show intro
-		if start_intro == True:
-			if intro_fade.fade():
-				start_intro = False
-				intro_fade.fade_counter = 0
+			#show intro
+			if start_intro == True:
+				if intro_fade.fade():
+					start_intro = False
+					intro_fade.fade_counter = 0
 
-		#update player actions
-		if player.alive:
-			#shoot bullets
-			if shoot:
-				player.shooting()
-			#throw grenade
-			elif grenade and grenade_thrown == False and player.grenades > 0:
-				grenade = Grenade(player.rect.centerx + (0.5 * player.rect.size[0] * player.direction),\
-				 			player.rect.top, player.direction)
-				grenade_group.add(grenade)
-				#reduce grernades
-				player.grenades -= 1
-				grenade_thrown = True
-			if player.in_air:
-				player.update_action(2)#2: jump
-			elif moving_left or moving_right:
-				player.update_action(1)#1: run
-			else:
-				player.update_action(0)#0: ldle
-			screen_scroll, level_complete = player.move(moving_left,moving_right)
+			#update player actions
+			if player.alive:
+				if game_pause == False:
+					#shoot bullets
+					if shoot:
+						player.shooting()
+					#throw grenade
+					elif grenade and grenade_thrown == False and player.grenades > 0:
+						grenade = Grenade(player.rect.centerx + (0.5 * player.rect.size[0] * player.direction),\
+						 			player.rect.top, player.direction)
+						grenade_group.add(grenade)
+						#reduce grernades
+						player.grenades -= 1
+						grenade_thrown = True
+					if player.in_air:
+						player.update_action(2)#2: jump
+					elif moving_left or moving_right:
+						player.update_action(1)#1: run
+					else:
+						player.update_action(0)#0: ldle
+					screen_scroll, level_complete = player.move(moving_left,moving_right)
 
-			bg_scroll -= screen_scroll
-			#check if player has completed the level
-			if level_complete:
-				start_intro = True
-				level += 1
-				bg_scroll = 0
-				world_data = reset_level()
-				if level <= MAX_LEVELS:
-					#load in the level data & create world
-					with open(f'level{level}_data.csv', newline = '') as csvfile:
-						reader = csv.reader(csvfile, delimiter = ',')
-						for x, row in enumerate(reader):
-							for y, tile in enumerate(row):
-								world_data[x][y] = int(tile)
-					world = World()
-					player, health_bar = world.process_data(world_data)
+					bg_scroll -= screen_scroll
+					#check if player has completed the level
+					if level_complete:
+						ScorePlayer += player.temp_score
+						start_intro = True
+						level += 1
+						bg_scroll = 0
+						world_data = reset_level()
+						if level <= MAX_LEVELS:
+							#load in the level data & create world
+							with open(f'level{level}_data.csv', newline = '') as csvfile:
+								reader = csv.reader(csvfile, delimiter = ',')
+								for x, row in enumerate(reader):
+									for y, tile in enumerate(row):
+										world_data[x][y] = int(tile)
+							world = World()
+							player, health_bar = world.process_data(world_data)
+						if level > MAX_LEVELS:
+							for x in range(len(scorelist)) :
+								if ScorePlayer >= int(scorelist[x]) and tran == True :
+									scorelist.insert(x,str(ScorePlayer)+'\n')
+									scorelist.pop(len(scorelist)-1)
+									playerlist.insert(x,Player_name+'\n')
+									playerlist.pop(len(playerlist)-1)
+									tran = False
+							plsend = ""
+							scsend = ""
+							for i in playerlist:
+								plsend += i
+							for i in scorelist:
+								scsend += i    
+							sctxt = open("scorebar.txt",'w') 
+							pltxt = open("player.txt",'w')
+							sctxt.write(scsend)
+							pltxt.write(plsend)
+							sctxt.close()
+							pltxt.close()
+
+							ScorePlayer = 0
+							player_name = False
+							Player_name = ''
+							
+							start_game = False
+							ScoreStart = True
+							level = 1
+							world_data = reset_level()
+							#load in the level data & create world
+							with open(f'level{level}_data.csv', newline = '') as csvfile:
+								reader = csv.reader(csvfile, delimiter = ',')
+								for x, row in enumerate(reader):
+									for y, tile in enumerate(row):
+										world_data[x][y] = int(tile)
+							world = World()
+							player, health_bar = world.process_data(world_data)
 				else:
-					level = 1
+					draw_bg()
+					if resume_button.draw(screen):
+						game_pause = False
+					if menu_button.draw(screen):
+						start_game = False
+						game_pause = False
+						time.sleep(0.1)
+					screen_scroll = 0
+							
+			else:
+				screen_scroll = 0
+				if death_fade.fade():
+					if restart_button.draw(screen):
+						death_fade.fade_counter = 0
+						start_intro = True
+						bg_scroll = 0
+						world_data = reset_level()
+						#load in the level data & create world
+						with open(f'level{level}_data.csv', newline = '') as csvfile:
+							reader = csv.reader(csvfile, delimiter = ',')
+							for x, row in enumerate(reader):
+								for y, tile in enumerate(row):
+									world_data[x][y] = int(tile)
+						world = World()
+						player, health_bar = world.process_data(world_data)
 
-		else:
-			screen_scroll = 0
-			if death_fade.fade():
-				if restart_button.draw(screen):
-					death_fade.fade_counter = 0
-					start_intro = True
-					bg_scroll = 0
-					world_data = reset_level()
-					#load in the level data & create world
-					with open(f'level{level}_data.csv', newline = '') as csvfile:
-						reader = csv.reader(csvfile, delimiter = ',')
-						for x, row in enumerate(reader):
-							for y, tile in enumerate(row):
-								world_data[x][y] = int(tile)
-					world = World()
-					player, health_bar = world.process_data(world_data)
+
+
+
+
+		else: 
+			draw_bg()
+			draw_name()	
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					run = False
+				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_BACKSPACE:
+						Player_name = Player_name[:-1]
+					elif len(Player_name) <= 10 and event.key != pygame.K_RETURN:
+						Player_name += event.unicode
+					if event.key == pygame.K_RETURN and len(Player_name) >= 1:
+						player_name = True
 
 	for event in pygame.event.get():
 		#quit
@@ -963,6 +1155,9 @@ while run:
 				jump_fx.play()
 			if event.key == pygame.K_ESCAPE:
 				run = False
+			if event.key == pygame.K_p:
+				game_pause = True
+
 
 		#keyboard released
 		if event.type == pygame.KEYUP:
