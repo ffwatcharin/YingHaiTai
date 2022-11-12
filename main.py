@@ -827,7 +827,6 @@ with open(f'level{level}_data.csv', newline = '') as csvfile:
 world = World()
 player, health_bar = world.process_data(world_data)
 
-
 #name menu
 def draw_name():
     screen.fill('GREY')
@@ -909,11 +908,11 @@ class Score_Board():
         self.playername_fourth = ScoreInput(screen,"4: " + playerlist[3],GREEN, 200, 400, 2)
         self.playername_fifth = ScoreInput(screen,"5: " + playerlist[4], GREEN, 200, 500, 2)
         
-        self.score_first = ScoreInput(screen,scorelist[0], MINT, 560, 100, 2)
-        self.score_second = ScoreInput(screen,scorelist[1],MINT, 560, 200 ,2)
-        self.score_third = ScoreInput(screen,scorelist[2], MINT, 560, 300, 2)
-        self.score_fourth = ScoreInput(screen,scorelist[3],MINT, 560, 400, 2)
-        self.score_fifth = ScoreInput(screen,scorelist[4], MINT, 560, 500, 2)
+        self.score_first = ScoreInput(screen,scorelist[0], MINT, 580, 100, 2)
+        self.score_second = ScoreInput(screen,scorelist[1],MINT, 580, 200 ,2)
+        self.score_third = ScoreInput(screen,scorelist[2], MINT, 580, 300, 2)
+        self.score_fourth = ScoreInput(screen,scorelist[3],MINT, 580, 400, 2)
+        self.score_fifth = ScoreInput(screen,scorelist[4], MINT, 580, 500, 2)
 
         sctxt.close()
         pltxt.close()
