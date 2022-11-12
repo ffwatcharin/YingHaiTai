@@ -43,7 +43,6 @@ start_intro = False
 total_time = 0
 game_pause = False
 
-
 #player actions
 moving_left = False
 moving_right = False
@@ -64,9 +63,11 @@ shoot_fx.set_volume(0.02)
 grenade_fx = pygame.mixer.Sound('assets/audio/grenade.wav')
 grenade_fx.set_volume(0.03)
 
-#-------------load images---------------#
+#-------------load images------------------------------------------------------#
+
 intro_bg = pygame.image.load("assets/img/buttons/intro.png").convert_alpha()
 intro_bg = pygame.transform.scale(intro_bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
 # Buttons
 start_img = pygame.image.load(f'assets/img/buttons/start_btn.png').convert_alpha()
 exit_img = pygame.image.load(f'assets/img/buttons/exit_btn.png').convert_alpha()
@@ -74,6 +75,7 @@ restart_img = pygame.image.load(f'assets/img/buttons/restart_btn.png').convert_a
 score_img = pygame.image.load(f'assets/img/buttons/score_btn.png').convert_alpha()
 resume_img = pygame.image.load(f'assets/img/buttons/resume_btn.png').convert_alpha()
 menu_img = pygame.image.load(f'assets/img/buttons/menu_btn.png').convert_alpha()
+menu1_img = pygame.image.load(f'assets/img/buttons/menu1_btn.png').convert_alpha()
 
 # backgrounds
 tree1_img = pygame.image.load(f'assets/img/background/level{level}/tree1.png').convert_alpha()
@@ -121,7 +123,6 @@ def draw_score():
     screen.blit(text_score, (710,20))
 
 def draw_text(text, font, text_color, x, y):
-	# to display some texts (i.e. enemies health and etc.)
 	img = font.render(text, True, text_color)
 	screen.blit(img, (x, y))
 
@@ -397,7 +398,6 @@ class Soldier(pygame.sprite.Sprite):
 			self.speed = 0
 			self.alive = False
 			self.update_action(3)
-
 
 	def draw(self):
 		screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
@@ -799,6 +799,7 @@ restart_button = button.Button(SCREEN_WIDTH // 2 -100, SCREEN_HEIGHT // 2 - 50, 
 score_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 110, score_img, 1)
 resume_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 - 110, resume_img, 1)
 menu_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 70, menu_img, 1)
+menu1_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 230, menu1_img, 1)
 
 
 #create sprite groups
@@ -912,6 +913,7 @@ class Score_Board():
 
         sctxt.close()
         pltxt.close()
+    
     def display_score(self):
         self.read()
         self.playername_first.draw()
@@ -924,6 +926,7 @@ class Score_Board():
         self.score_third.draw()
         self.score_fourth.draw()
         self.score_fifth.draw()
+    
     def run(self):
         screen.fill('GREY')
         self.display_score() 
@@ -933,7 +936,6 @@ ScoreStart = False
 ScorePlayer = 0
 player_name = False
 Player_name = ''
-
 
 run = True
 while run:
@@ -957,7 +959,7 @@ while run:
 			ScoreStart = True
 		if ScoreStart:
 			scorebar.run()
-			if menu_button.draw(screen):
+			if menu1_button.draw(screen):
 				ScoreStart = False
 
 
