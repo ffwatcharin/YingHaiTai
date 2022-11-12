@@ -12,7 +12,7 @@ mixer.init()
 pygame.init()
 
 # set screen size
-SCREEN_WIDTH = 850
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.9)
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
@@ -120,7 +120,7 @@ font = pygame.font.SysFont('Avenir', 30)
 
 def draw_score():
     text_score = font.render("SCORE : " + str(ScorePlayer + player.temp_score), True, (255, 255, 255))
-    screen.blit(text_score, (710,20))
+    screen.blit(text_score, (650,20))
 
 def draw_text(text, font, text_color, x, y):
 	img = font.render(text, True, text_color)
