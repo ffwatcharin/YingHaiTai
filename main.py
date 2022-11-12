@@ -900,20 +900,20 @@ class Score_Board():
                 playerlist.append(playerx)
                 playerx= ""
 
-        score_name = font.render("High Score", True, BLACK)
+        score_name = font.render(". . Best High Score . .", True, WHITE)
         screen.blit(score_name, (SCREEN_WIDTH // 2 - score_name.get_width() // 2, 50))
 
-        self.playername_first = ScoreInput(screen,"1. " + playerlist[0], GREEN, 200, 100, 2)
-        self.playername_second = ScoreInput(screen,"2. " + playerlist[1],GREEN, 200, 200 ,2)
-        self.playername_third = ScoreInput(screen,"3. " + playerlist[2], GREEN, 200, 300, 2)
-        self.playername_fourth = ScoreInput(screen,"4. " + playerlist[3],GREEN, 200, 400, 2)
-        self.playername_fifth = ScoreInput(screen,"5. " + playerlist[4], GREEN, 200, 500, 2)
+        self.playername_first = ScoreInput(screen,"1: " + playerlist[0], GREEN, 200, 100, 2)
+        self.playername_second = ScoreInput(screen,"2: " + playerlist[1],GREEN, 200, 200 ,2)
+        self.playername_third = ScoreInput(screen,"3: " + playerlist[2], GREEN, 200, 300, 2)
+        self.playername_fourth = ScoreInput(screen,"4: " + playerlist[3],GREEN, 200, 400, 2)
+        self.playername_fifth = ScoreInput(screen,"5: " + playerlist[4], GREEN, 200, 500, 2)
         
-        self.score_first = ScoreInput(screen,scorelist[0], MINT, 550, 100, 2)
-        self.score_second = ScoreInput(screen,scorelist[1],MINT, 550, 200 ,2)
-        self.score_third = ScoreInput(screen,scorelist[2], MINT, 550, 300, 2)
-        self.score_fourth = ScoreInput(screen,scorelist[3],MINT, 550, 400, 2)
-        self.score_fifth = ScoreInput(screen,scorelist[4], MINT, 550, 500, 2)
+        self.score_first = ScoreInput(screen,scorelist[0], MINT, 560, 100, 2)
+        self.score_second = ScoreInput(screen,scorelist[1],MINT, 560, 200 ,2)
+        self.score_third = ScoreInput(screen,scorelist[2], MINT, 560, 300, 2)
+        self.score_fourth = ScoreInput(screen,scorelist[3],MINT, 560, 400, 2)
+        self.score_fifth = ScoreInput(screen,scorelist[4], MINT, 560, 500, 2)
 
         sctxt.close()
         pltxt.close()
@@ -932,7 +932,7 @@ class Score_Board():
         self.score_fifth.draw()
     
     def run(self):
-        screen.fill('GREY')
+        screen.fill('BLACK')
         self.display_score() 
 
 #score vars
