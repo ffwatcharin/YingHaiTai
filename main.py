@@ -52,16 +52,16 @@ grenade_thrown = False
 
 #load music 
 pygame.mixer.music.load('assets/audio/music.mp3')
-pygame.mixer.music.set_volume(0.2)
+pygame.mixer.music.set_volume(0.09)
 pygame.mixer.music.play(-1, 0.0, 5000)
 
 #load sound effect
 jump_fx = pygame.mixer.Sound('assets/audio/jump.wav')
-jump_fx.set_volume(0.03)
+jump_fx.set_volume(0.3)
 shoot_fx = pygame.mixer.Sound('assets/audio/shoot.wav')
-shoot_fx.set_volume(0.02)
+shoot_fx.set_volume(0.1)
 grenade_fx = pygame.mixer.Sound('assets/audio/grenade.wav')
-grenade_fx.set_volume(0.03)
+grenade_fx.set_volume(0.1)
 
 #-------------load images------------------------------------------------------#
 
@@ -448,8 +448,9 @@ class Special(pygame.sprite.Sprite):
         if self.rect.colliderect(player):
             if self.alive:
                 self.health -= 25
+                player.temp_score += 50
                 damage_text = DamageText(self.rect.centerx,
-                                         self.rect.centery, str(" SPEED !!!!!!!! "), SKYBLUE)
+                                         self.rect.centery, str(" SPEED !!!!! "), SKYBLUE)
                 damage_text_group.add(damage_text)
                 if player.alive:
                     player.speed += 2
@@ -659,10 +660,11 @@ class Bullet(pygame.sprite.Sprite):
 					if special.alive:
 						special.health = -25
 						damage_text = DamageText(special.rect.centerx,
-						special.rect.centery, str("Y U SHOOT BRO! HAHAHAHAH"), RED)
+						special.rect.centery, str("Y U SHOOT BRO! HAHAHA"), RED)
 						damage_text_group.add(damage_text)
 						if player.alive:
 							player.health -= 50
+							player.temp_score -= 200
 							self.kill()
 
 class Grenade(pygame.sprite.Sprite):
@@ -793,9 +795,9 @@ death_fade = ScreenFade(2, YELLOW, 10)
 
 #create buttons
 start_button = button.Button(SCREEN_WIDTH // 2 -130, SCREEN_HEIGHT // 2 - 120, start_img, 1)
-exit_button = button.Button(SCREEN_WIDTH // 2 -110, SCREEN_HEIGHT // 2 - 10, exit_img, 1)
+exit_button = button.Button(SCREEN_WIDTH // 2 -110, SCREEN_HEIGHT // 2 - 15, exit_img, 1)
 restart_button = button.Button(SCREEN_WIDTH // 2 -100, SCREEN_HEIGHT // 2 - 50, restart_img, 2)
-score_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 110, score_img, 1)
+score_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 90, score_img, 1)
 resume_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 - 110, resume_img, 1)
 menu_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 70, menu_img, 1)
 menu1_button = button.Button(SCREEN_WIDTH // 2 - 130, SCREEN_HEIGHT // 2 + 230, menu1_img, 1)
@@ -829,7 +831,7 @@ player, health_bar = world.process_data(world_data)
 
 #name menu
 def draw_name():
-    screen.fill('GREY')
+    screen.fill(SKYBLUE)
     
     text_name = font.render("Input Your Name Please!", True, BLACK)
     screen.blit(text_name, (SCREEN_WIDTH // 2 - text_name.get_width() // 2, 50))
