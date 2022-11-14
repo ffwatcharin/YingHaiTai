@@ -17,7 +17,7 @@ SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.9)
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 # set window icon and title
-pygame.display.set_caption('YingHaiTai')
+pygame.display.set_caption('YING HAI TAI')
 gameIcon = pygame.image.load('assets/img/icons/game_icon.png')
 pygame.display.set_icon(gameIcon)
 
@@ -403,9 +403,9 @@ class Soldier(pygame.sprite.Sprite):
 		screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
 class Special(pygame.sprite.Sprite):
-    # this class is responsible for the animated entities such as Dogs , crows , chests
+    # this class is responsible for the animated  Dogs , crows , chests
     def __init__(self, special_type, x, y, scale):
-        # Call the parent class (Sprite) constructor
+        # Call Sprite constructor
         pygame.sprite.Sprite.__init__(self)
         self.special_type = special_type
         self.frame_index = 0
@@ -453,7 +453,7 @@ class Special(pygame.sprite.Sprite):
                                          self.rect.centery, str(" SPEED !!!!! "), SKYBLUE)
                 damage_text_group.add(damage_text)
                 if player.alive:
-                    player.speed += 2
+                    player.speed += 1
 
     def update_animation(self):
         ANIMATION_COOLDOWN = 100
@@ -635,17 +635,18 @@ class Bullet(pygame.sprite.Sprite):
 		#check if bellet has gone off screen
 		if self.rect.right < 0 or self.rect.left > SCREEN_WIDTH:
 			self.kill()  # del bullet
-
-		#check for collison with level
-			# check collision with environment
+		
+		# check collision with environm ent
 		for tile in world.obstacle_list:
 			if tile[1].colliderect(self.rect):
 				self.kill()
+		
 		#check collision with character
 		if pygame.sprite.spritecollide(player, bullet_group, False):
 			if player.alive:
 				player.health -= 5
 				self.kill()
+		
 		for enemy in enemy_group:
 			if pygame.sprite.spritecollide(enemy, bullet_group, False):
 				if enemy.alive:
@@ -654,6 +655,7 @@ class Bullet(pygame.sprite.Sprite):
 						damage_text = DamageText(enemy.rect.centerx, enemy.rect.centery, str(enemy.health), RED1)
 						damage_text_group.add(damage_text)
 					self.kill()
+		
 		for special in special_group:
 			if special.special_type != "chest":
 				if pygame.sprite.spritecollide(special, bullet_group, False):
@@ -663,7 +665,7 @@ class Bullet(pygame.sprite.Sprite):
 						special.rect.centery, str("Y U SHOOT BRO! HAHAHA"), RED)
 						damage_text_group.add(damage_text)
 						if player.alive:
-							player.health -= 50
+							player.health -= 20
 							player.temp_score -= 200
 							self.kill()
 
@@ -687,7 +689,7 @@ class Grenade(pygame.sprite.Sprite):
 
 		#check for the collisoin with level
 		for tile in world.obstacle_list:
-			#check collision with walls
+			#check collision with walls 
 			if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
 				self.direction *= -1
 				dx = self.direction * self.speed
@@ -734,7 +736,8 @@ class Grenade(pygame.sprite.Sprite):
 							damage_text = DamageText(special.rect.centerx, special.rect.centery, str("LOL NOOB"), RED)
 							damage_text_group.add(damage_text)
 							if player.alive:
-								player.health -= 50
+								player.health -= 30
+								player.temp_score -= 200
 								self.kill()
 
 class Explosion(pygame.sprite.Sprite):
@@ -791,7 +794,7 @@ class ScreenFade():
 
 #create screen fades
 intro_fade = ScreenFade(1, BLACK, 4)
-death_fade = ScreenFade(2, YELLOW, 10)
+death_fade = ScreenFade(2, RED, 10)
 
 #create buttons
 start_button = button.Button(SCREEN_WIDTH // 2 -130, SCREEN_HEIGHT // 2 - 120, start_img, 1)
@@ -839,7 +842,7 @@ def draw_name():
     text_surface = font.render(Player_name, True, GREEN) 
     screen.blit(text_surface,(SCREEN_WIDTH // 2 - text_surface.get_width() // 2, SCREEN_HEIGHT // 2 - text_surface.get_height() // 2))
 
-#score
+#-------------score----------------
 
 sctxt =open("scorebar.txt",'r')
 pltxt =open("player.txt",'r')
