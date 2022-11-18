@@ -13,7 +13,7 @@ pygame.init()
 
 # set screen size
 SCREEN_WIDTH = 800
-SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.9)
+SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.9) #720
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 # set window icon and title
@@ -842,7 +842,7 @@ def draw_name():
     text_surface = font.render(Player_name, True, GREEN) 
     screen.blit(text_surface,(SCREEN_WIDTH // 2 - text_surface.get_width() // 2, SCREEN_HEIGHT // 2 - text_surface.get_height() // 2))
 
-#-------------score----------------
+#-------------score----------------#
 
 sctxt =open("scorebar.txt",'r')
 pltxt =open("player.txt",'r')
