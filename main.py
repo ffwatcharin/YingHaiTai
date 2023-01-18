@@ -18,8 +18,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 # set window icon and title
 pygame.display.set_caption('YING HAI TAI')
-gameIcon = pygame.image.load('assets/img/icons/game_icon.png')
-pygame.display.set_icon(gameIcon)
+#gameIcon = pygame.image.load('assets/img/icons/game_icon.png')
+#pygame.display.set_icon(gameIcon)
 
 #set FPS
 clock = pygame.time.Clock()
@@ -30,7 +30,8 @@ GRAVITY = 0.75
 SCROLL_THRESH = 200
 ROWS = 16
 COLS = 150
-TILE_SIZE = SCREEN_HEIGHT // ROWS
+TILE_SIZE = SCREEN_HEIGHT // ROWS 
+
 TILE_TYPES = 30
 MAX_LEVELS = 3
 MISSIONS = {1: 'CurryLand! YIN DEE TON RUB', 2: "120$ Curry Mahussajunnn", 3: "SuperCurry Yummy makmak"}
@@ -44,7 +45,7 @@ total_time = 0
 game_pause = False
 
 #player actions
-moving_left = False
+moving_left = False 
 moving_right = False
 shoot = False
 grenade = False
